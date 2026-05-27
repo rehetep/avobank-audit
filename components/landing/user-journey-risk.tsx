@@ -1,8 +1,8 @@
 "use client"
 
 import { motion } from "framer-motion"
-import { FileText, AlertCircle, ArrowRight } from "lucide-react"
-import { Button } from "@/components/ui/button"
+import { AlertCircle, ArrowRight } from "lucide-react"
+import { CalendlyPopupButton } from "./calendly-popup-button"
 
 const journeySteps = [
   { label: "Реклама", status: "ok" },
@@ -192,16 +192,9 @@ export function UserJourneyRisk() {
           <p className="text-muted-foreground leading-relaxed mb-8">
             Внешний аудит показывает симптомы. Внутренний аудит нужен, чтобы увидеть точные точки выхода, масштаб потерь и связь рекламных сообщений с реальными клиентами.
           </p>
-          <Button 
-            asChild
-            size="lg"
-            className="bg-[#2E1A47] hover:bg-[#2E1A47]/90 text-white"
-          >
-            <a href="https://calendly.com/rp-bartka/30min" target="_blank" rel="noopener noreferrer">
-              <FileText className="w-5 h-5 mr-2" />
-              Открыть полный аудит
-            </a>
-          </Button>
+          <CalendlyPopupButton 
+            className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 bg-[#2E1A47] hover:bg-[#2E1A47]/90 text-white h-11 px-8"
+          />
         </motion.div>
       </div>
     </section>

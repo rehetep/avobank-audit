@@ -2,8 +2,8 @@
 
 import { useState, useEffect } from "react"
 import { motion, AnimatePresence } from "framer-motion"
-import { Menu, X, FileText } from "lucide-react"
-import { Button } from "@/components/ui/button"
+import { Menu, X } from "lucide-react"
+import { CalendlyPopupButton } from "./calendly-popup-button"
 
 const navLinks = [
   { href: "#ceo-summary", label: "Выводы" },
@@ -73,15 +73,9 @@ export function Header() {
                 <span className="text-xs text-muted-foreground">Внешний digital-аудит</span>
               </div>
               
-              <Button 
-                asChild
-                className="hidden sm:inline-flex bg-[#2E1A47] hover:bg-[#2E1A47]/90 text-white"
-              >
-                <a href="https://calendly.com/rp-bartka/30min" target="_blank" rel="noopener noreferrer">
-                  <FileText className="w-4 h-4 mr-2" />
-                  Открыть полный аудит
-                </a>
-              </Button>
+              <CalendlyPopupButton 
+                className="hidden sm:inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 bg-[#2E1A47] hover:bg-[#2E1A47]/90 text-white h-9 px-4"
+              />
 
               {/* Mobile Menu Button */}
               <button
@@ -115,15 +109,9 @@ export function Header() {
                   {link.label}
                 </a>
               ))}
-              <Button 
-                asChild
-                className="mt-2 bg-[#2E1A47] hover:bg-[#2E1A47]/90 text-white"
-              >
-                <a href="https://calendly.com/rp-bartka/30min" target="_blank" rel="noopener noreferrer" onClick={() => setIsMobileMenuOpen(false)}>
-                  <FileText className="w-4 h-4 mr-2" />
-                  Открыть полный аудит
-                </a>
-              </Button>
+              <CalendlyPopupButton 
+                className="mt-2 w-full inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 bg-[#2E1A47] hover:bg-[#2E1A47]/90 text-white h-9 px-4"
+              />
             </nav>
           </motion.div>
         )}
