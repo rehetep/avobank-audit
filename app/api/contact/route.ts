@@ -83,7 +83,7 @@ export async function POST(request: NextRequest) {
     // Send email
     const { error } = await resend.emails.send({
       from: "AVO Audit Landing <onboarding@resend.dev>",
-      to: "welcome@bartka.agency",
+      to: "maksym@bandera.agency", // Временно - пока не верифицирован домен bartka.agency
       subject: `Запрос от ${fullName}`,
       html: emailHtml,
       replyTo: email,
