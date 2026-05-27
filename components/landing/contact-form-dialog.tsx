@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import { MessageSquare, Loader2, CheckCircle, AlertCircle } from "lucide-react"
+import { MessageSquare, Loader2, CheckCircle, AlertCircle, ChevronDown } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import {
   Dialog,
@@ -13,6 +13,28 @@ import {
 } from "@/components/ui/dialog"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
+
+const countryCodes = [
+  { code: "+998", country: "UZ", flag: "🇺🇿", name: "Узбекистан" },
+  { code: "+7", country: "RU", flag: "🇷🇺", name: "Россия" },
+  { code: "+7", country: "KZ", flag: "🇰🇿", name: "Казахстан" },
+  { code: "+380", country: "UA", flag: "🇺🇦", name: "Украина" },
+  { code: "+992", country: "TJ", flag: "🇹🇯", name: "Таджикистан" },
+  { code: "+996", country: "KG", flag: "🇰🇬", name: "Кыргызстан" },
+  { code: "+993", country: "TM", flag: "🇹🇲", name: "Туркменистан" },
+  { code: "+994", country: "AZ", flag: "🇦🇿", name: "Азербайджан" },
+  { code: "+995", country: "GE", flag: "🇬🇪", name: "Грузия" },
+  { code: "+374", country: "AM", flag: "🇦🇲", name: "Армения" },
+  { code: "+971", country: "AE", flag: "🇦🇪", name: "ОАЭ" },
+  { code: "+90", country: "TR", flag: "🇹🇷", name: "Турция" },
+]
 
 interface ContactFormDialogProps {
   variant?: "default" | "outline" | "yellow"
@@ -25,6 +47,7 @@ export function ContactFormDialog({ variant = "default", className, children }: 
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [status, setStatus] = useState<"idle" | "success" | "error">("idle")
   const [errorMessage, setErrorMessage] = useState("")
+  const [countryCode, setCountryCode] = useState("+998")
   
   const [formData, setFormData] = useState({
     fullName: "",
@@ -38,6 +61,18 @@ export function ContactFormDialog({ variant = "default", className, children }: 
     setStatus("idle")
     setErrorMessage("")
 
+    // Get local time info
+    const now = new Date()
+    const localTime = now.toLocaleString("ru-RU", {
+      day: "2-digit",
+      month: "2-digit",
+      year: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+      second: "2-digit",
+    })
+    const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone
+
     try {
       const response = await fetch("/api/contact", {
         method: "POST",
@@ -46,7 +81,10 @@ export function ContactFormDialog({ variant = "default", className, children }: 
         },
         body: JSON.stringify({
           ...formData,
+          phone: `${countryCode} ${formData.phone}`,
           pageUrl: window.location.href,
+          localTime,
+          timezone,
         }),
       })
 
@@ -54,6 +92,14 @@ export function ContactFormDialog({ variant = "default", className, children }: 
 
       if (!response.ok) {
         throw new Error(data.error || "Произошла ошибка при отправке")
+      }
+
+      // Track GTM event
+      if (typeof window !== "undefined" && window.dataLayer) {
+        window.dataLayer.push({
+          event: "form_submit",
+          form_name: "contact_form",
+        })
       }
 
       setStatus("success")
@@ -72,6 +118,16 @@ export function ContactFormDialog({ variant = "default", className, children }: 
     }
   }
 
+  const handleOpenChange = (newOpen: boolean) => {
+    setOpen(newOpen)
+    // Track GTM event when dialog opens
+    if (newOpen && typeof window !== "undefined" && window.dataLayer) {
+      window.dataLayer.push({
+        event: "contact_dialog_open",
+      })
+    }
+  }
+
   const getButtonStyles = () => {
     if (variant === "yellow") {
       return "bg-[#FAFF00] hover:bg-[#FAFF00]/90 text-[#2E1A47] font-semibold px-8"
@@ -83,7 +139,7 @@ export function ContactFormDialog({ variant = "default", className, children }: 
   }
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
+    <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogTrigger asChild>
         {children || (
           <Button 
@@ -139,15 +195,33 @@ export function ContactFormDialog({ variant = "default", className, children }: 
 
             <div className="space-y-2">
               <Label htmlFor="phone">Телефон *</Label>
-              <Input
-                id="phone"
-                type="tel"
-                placeholder="+998 90 123 45 67"
-                value={formData.phone}
-                onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                required
-                disabled={isSubmitting}
-              />
+              <div className="flex gap-2">
+                <Select value={countryCode} onValueChange={setCountryCode} disabled={isSubmitting}>
+                  <SelectTrigger className="w-[120px]">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {countryCodes.map((c) => (
+                      <SelectItem key={`${c.country}-${c.code}`} value={c.code}>
+                        <span className="flex items-center gap-2">
+                          <span>{c.flag}</span>
+                          <span>{c.code}</span>
+                        </span>
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                <Input
+                  id="phone"
+                  type="tel"
+                  placeholder="90 123 45 67"
+                  value={formData.phone}
+                  onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                  required
+                  disabled={isSubmitting}
+                  className="flex-1"
+                />
+              </div>
             </div>
 
             {status === "error" && (
@@ -180,4 +254,11 @@ export function ContactFormDialog({ variant = "default", className, children }: 
       </DialogContent>
     </Dialog>
   )
+}
+
+// Add dataLayer type for GTM
+declare global {
+  interface Window {
+    dataLayer: Record<string, unknown>[]
+  }
 }

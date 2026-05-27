@@ -6,7 +6,7 @@ const resend = new Resend(process.env.RESEND_API_KEY)
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
-    const { fullName, email, phone, pageUrl } = body
+    const { fullName, email, phone, pageUrl, localTime, timezone } = body
 
     // Validate required fields
     if (!fullName || !email || !phone) {
@@ -39,18 +39,9 @@ export async function POST(request: NextRequest) {
       location = "Не удалось определить"
     }
 
-    // Get current date and time
+    // Get UTC time
     const now = new Date()
-    const dateStr = now.toLocaleDateString("ru-RU", {
-      day: "2-digit",
-      month: "2-digit",
-      year: "numeric",
-    })
-    const timeStr = now.toLocaleTimeString("ru-RU", {
-      hour: "2-digit",
-      minute: "2-digit",
-      timeZone: "Europe/Moscow",
-    })
+    const utcTime = now.toISOString().replace("T", " ").slice(0, 19) + " UTC"
 
     // Email content
     const emailHtml = `
@@ -61,13 +52,14 @@ export async function POST(request: NextRequest) {
           <h3 style="margin-top: 0; color: #333;">Контактные данные</h3>
           <p><strong>Имя и Фамилия:</strong> ${fullName}</p>
           <p><strong>Email:</strong> <a href="mailto:${email}">${email}</a></p>
-          <p><strong>Телефон:</strong> <a href="tel:${phone}">${phone}</a></p>
+          <p><strong>Телефон:</strong> <a href="tel:${phone.replace(/\s/g, "")}">${phone}</a></p>
         </div>
         
         <div style="background-color: #f5f5f5; padding: 20px; border-radius: 8px; margin: 20px 0;">
           <h3 style="margin-top: 0; color: #333;">Техническая информация</h3>
-          <p><strong>Дата:</strong> ${dateStr}</p>
-          <p><strong>Время (МСК):</strong> ${timeStr}</p>
+          <p><strong>Локальное время пользователя:</strong> ${localTime || "Не определено"}</p>
+          <p><strong>Часовой пояс:</strong> ${timezone || "Не определен"}</p>
+          <p><strong>Время UTC:</strong> ${utcTime}</p>
           <p><strong>IP адрес:</strong> ${ip}</p>
           <p><strong>Локация:</strong> ${location}</p>
           <p><strong>Страница:</strong> <a href="${pageUrl}">${pageUrl}</a></p>
@@ -84,7 +76,7 @@ export async function POST(request: NextRequest) {
     const { error } = await resend.emails.send({
       from: "AVO Audit Landing <onboarding@resend.dev>",
       to: "maksym@bandera.agency", // Временно - пока не верифицирован домен bartka.agency
-      subject: `Запрос от ${fullName}`,
+      subject: `Запрос от ${fullName} - AVO Bank Audit`,
       html: emailHtml,
       replyTo: email,
     })

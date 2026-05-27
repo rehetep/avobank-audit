@@ -11,10 +11,12 @@ import { WhyInternalAudit } from "@/components/landing/why-internal-audit"
 import { FinalCta } from "@/components/landing/final-cta"
 import { Footer } from "@/components/landing/footer"
 import { MobileStickyCta } from "@/components/landing/mobile-sticky-cta"
+import { GTMTracking } from "@/components/gtm-tracking"
 
 export default function AvoAuditLandingPage() {
   return (
     <main className="min-h-screen">
+      <GTMTracking />
       <Header />
       <Hero />
       <TrustStrip />
