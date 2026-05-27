@@ -1,9 +1,8 @@
 "use client"
 
 import { motion } from "framer-motion"
-import { FileText } from "lucide-react"
-import { Button } from "@/components/ui/button"
 import { ContactFormDialog } from "./contact-form-dialog"
+import { CalendlyPopupButton } from "./calendly-popup-button"
 
 export function FinalCta() {
   return (
@@ -28,16 +27,9 @@ export function FinalCta() {
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button 
-              asChild
-              size="lg"
-              className="bg-[#2E1A47] hover:bg-[#2E1A47]/90 text-white font-semibold px-8"
-            >
-              <a href="https://calendly.com/rp-bartka/30min" target="_blank" rel="noopener noreferrer">
-                <FileText className="w-5 h-5 mr-2" />
-                Открыть полный аудит
-              </a>
-            </Button>
+            <CalendlyPopupButton 
+              className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 bg-[#2E1A47] hover:bg-[#2E1A47]/90 text-white font-semibold h-11 px-8"
+            />
             <ContactFormDialog variant="outline" />
           </div>
 

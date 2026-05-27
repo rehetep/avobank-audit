@@ -2,8 +2,7 @@
 
 import { useState, useEffect } from "react"
 import { motion, AnimatePresence } from "framer-motion"
-import { FileText } from "lucide-react"
-import { Button } from "@/components/ui/button"
+import { CalendlyPopupButton } from "./calendly-popup-button"
 
 export function MobileStickyCta() {
   const [isVisible, setIsVisible] = useState(false)
@@ -29,16 +28,9 @@ export function MobileStickyCta() {
           transition={{ duration: 0.3 }}
           className="fixed bottom-0 left-0 right-0 z-50 p-4 bg-background/95 backdrop-blur-md border-t border-border lg:hidden"
         >
-          <Button 
-            asChild
-            size="lg"
-            className="w-full bg-[#2E1A47] hover:bg-[#2E1A47]/90 text-white"
-          >
-            <a href="https://calendly.com/rp-bartka/30min" target="_blank" rel="noopener noreferrer">
-              <FileText className="w-5 h-5 mr-2" />
-              Открыть полный аудит
-            </a>
-          </Button>
+          <CalendlyPopupButton 
+            className="w-full inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 bg-[#2E1A47] hover:bg-[#2E1A47]/90 text-white h-11 px-8"
+          />
         </motion.div>
       )}
     </AnimatePresence>
