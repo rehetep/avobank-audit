@@ -59,6 +59,20 @@ export function Footer() {
           </nav>
         </div>
 
+        {/* Disclaimer */}
+        <div className="mt-8 pt-8 border-t border-border">
+          <p className="text-xs leading-relaxed text-muted-foreground text-pretty max-w-4xl mx-auto">
+            <span className="font-semibold text-foreground">Дисклеймер / Отказ от ответственности:</span> Данный
+            аналитический материал (маркетинговый аудит) подготовлен экспертами Bartka Agency исключительно в
+            исследовательских и демонстрационных целях. Все аналитические выводы, оценки и рекомендации основаны на
+            мониторинге открытых публичных источников (OSINT) и не содержат конфиденциальной информации банка. Товарный
+            знак, логотип и фирменное наименование «AVO Bank» принадлежат их законному правообладателю. Bartka Agency
+            является независимым агентством, не связано с правообладателем, не действует от его имени и не претендует на
+            права интеллектуальной собственности третьих лиц. Материал не преследует цель дискредитации бренда и
+            направлен исключительно на демонстрацию общих рыночных зон роста в сфере MarTech/UX.
+          </p>
+        </div>
+
         {/* Copyright */}
         <div className="mt-8 pt-8 border-t border-border text-center">
           <p className="text-sm text-muted-foreground">
